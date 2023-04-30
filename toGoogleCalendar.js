@@ -90,7 +90,7 @@ async function processing(auth_obj) {
     .then((res) => {
       //let data = res.data.schedules; //스케줄 배열
       let data = res;
-      console.log(data);
+      //console.log(data);
 
       let year = new Date().getFullYear().toString(); //년도 숫자값
       let month = getMonth(); //이번달 숫자값
@@ -98,6 +98,15 @@ async function processing(auth_obj) {
       data.map((summary, i) => {
         let days;
         let num = i + 1; //스케줄 배열의 인덱스 값에 1을 더해서 일 숫자값으로 초기화
+        let final_summary;
+
+        if (summary == "") {
+          final_summary = summary;
+        } else if (summary.includes("휴방")) {
+          final_summary = summary;
+        } else {
+          final_summary = "😜" + summary;
+        }
 
         //num이 한자리일때는 앞에 0을 더하고 아니면 그냥 days에 값 입력
         if (num < 10) {
@@ -109,7 +118,7 @@ async function processing(auth_obj) {
         // summary는 스케줄의 한 데이터
         let obj = {
           type: "스프레드 시트",
-          summary: summary,
+          summary: final_summary,
           start: `${year}-${month}-${days}`,
           end: `${year}-${month}-${days}`,
         };
@@ -118,17 +127,6 @@ async function processing(auth_obj) {
     });
 
   setTimeout(() => {
-    //console.log(event_list[0]);
-    //console.log(spread_list[0]);
-
-    //================================= Ver.2 ===============================================================
-
-    //스프레드의 데이터 하나가 이벤트데이터들에 있는지 반복해서 찾는다.
-    //있다. -> 같은 날짜가 있으면 summary가 같은지 확인한다.
-    //--같다.--> 같으면 그냥 넘김.
-    //--다르다.-->그러면 업데이트 해야함.
-    //없다. -> 그러면 그냥 insert 이벤트 하기.
-
     for (let i in spread_list) {
       let spreadsheet_date = spread_list[i].start.toString(); //스프레드시트 인덱스의 날짜가 나옴
       let days = parseInt(spreadsheet_date.slice(-2)); //몇일인지 숫자 값으로 나옴
