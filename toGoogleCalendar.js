@@ -84,7 +84,7 @@ async function processing(auth_obj) {
   let spread_list = [];
   //axios.get("https://schedule-ing.vercel.app/api/schedules/this-month")
 
-  let sheetName = "23년 4월";
+  let sheetName = process.env.SHEET_NAME;
   getSharedSheetAsJson(sheetName)
     .then(getAfter)
     .then((res) => {
